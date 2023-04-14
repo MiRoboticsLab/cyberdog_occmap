@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package proto;
+
+import "transform.proto";
+
+message PointCloud {
+  repeated Vector2d returns_points = 1;
+  Rigid2d local_pose = 2;
+  int64 time_stamp = 3;
+}
+
+message RangeData {
+  int64 time_stamp = 4;
+  repeated PointCloud point_clouds = 5;
+  Rigid2d submap_pose = 6;
+}

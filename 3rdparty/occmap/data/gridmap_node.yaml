@@ -1,0 +1,48 @@
+create_gridmap_node:
+  create_map_path: /home/hpf/mapping/
+  probability_param:
+    p_free: 0.45
+    p_occ: 0.65
+    p_prior: 0.5
+  laser_to_baselink:
+    position:
+    - 0.179
+    - 0.0
+    - 0.0837
+    quaternion:
+    - 0.0
+    - 0.0
+    - 0.0
+    - 1.0
+  sub_map:
+    resolution: 0.05
+    initx: 50
+    inity: 50
+    max_range: 15.0
+    min_range: 0.2
+    missing_data_ray_length: 5.0
+    num_accumulated: 35
+    sizex: 100
+    sizey: 100
+  filter_param:
+    # motion filter
+    max_time_seconds: 160 # ms
+    max_distance_meters: 0.2 # m
+    max_angle_radians: 0.0175 # rad
+    # voxel filter
+    min_num_points: 200
+    max_length: 0.05 # m
+    voxel_filter_size: 0.025
+  ceres_param:
+    use_nonmonotonic_steps: false
+    max_num_iterations: 20
+    num_threads: 1
+    occupied_space_weight: 10.0
+    translation_weight: 20.0
+    rotation_weight: 40.0
+  mapbeauti:
+    use_map_beauti: false
+    side_fill_thresh: 10.
+    approx_poly_thresh: 3.
+    dilate_kernel_size: 3
+    noise_removal_thresh: 2
