@@ -61,9 +61,6 @@ template<typename FloatType>
 class Rigid2
 {
 public:
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-
-public:
   using Vector = Eigen::Matrix<FloatType, 2, 1>;
   using Rotation2D = Eigen::Rotation2D<FloatType>;
 
@@ -73,7 +70,11 @@ public:
   : translation_(translation), rotation_(rotation) {}
   Rigid2(const Vector & translation, const FloatType angle)
   : translation_(translation), rotation_(angle) {}
-
+  void operator=(const Rigid2<FloatType> & D)
+  {
+    translation_ = D.translation();
+    rotation_ = D.rotation();
+  }
   static Rigid2 Rotation(const FloatType angle)
   {
     return Rigid2(Vector::Zero(), angle);
@@ -154,9 +155,6 @@ template<typename FloatType>
 class Rigid3
 {
 public:
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-
-public:
   using Vector = Eigen::Matrix<FloatType, 3, 1>;
   using Quaternion = Eigen::Quaternion<FloatType>;
   using AngleAxis = Eigen::AngleAxis<FloatType>;
@@ -167,7 +165,16 @@ public:
   : translation_(translation), rotation_(rotation) {}
   Rigid3(const Vector & translation, const AngleAxis & rotation)
   : translation_(translation), rotation_(rotation) {}
-
+  void operator=(const Rigid3<FloatType> & D)
+  {
+    translation_.x() = D.translation().x();
+    translation_.y() = D.translation().y();
+    translation_.z() = D.translation().z();
+    rotation_.w() = D.rotation().w();
+    rotation_.x() = D.rotation().x();
+    rotation_.y() = D.rotation().y();
+    rotation_.z() = D.rotation().z();
+  }
   static Rigid3 Rotation(const AngleAxis & angle_axis)
   {
     return Rigid3(Vector::Zero(), Quaternion(angle_axis));

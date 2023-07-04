@@ -67,13 +67,11 @@ std::unique_ptr<sensor::RangeDataCarto> GridMapper::AddRangeData(
   if (motion_filter_->IsSimilar(time, global_pose)) {
     return nullptr;
   }
-
   if (num_accumulated_ == 0) {
     accumulated_data_.time_stamp = common::ToUniversal(time) / 100ll;
     accumulated_data_.submap_pose = transform::ToRigid2(global_pose);
     current_submap_pose = global_pose;
   }
-
   sensor::PointCloud point_cloud;
   sensor::PointCloudCarto point_cloud_carto;
   for (size_t i = 0; i < points.points.size(); ++i) {
@@ -81,7 +79,6 @@ std::unique_ptr<sensor::RangeDataCarto> GridMapper::AddRangeData(
       transform::ToRigid2(global_pose.cast<float>() * laser2baselink.cast<float>()) *
       points.points.at(i));
   }
-
   // Insert point cloud into submap
   point_cloud_carto = sensor::AdaptivelyVoxelFiltered(point_cloud_carto, filter_param_);
   sensor::RangeDataCarto range_data_carto;
@@ -89,7 +86,6 @@ std::unique_ptr<sensor::RangeDataCarto> GridMapper::AddRangeData(
   for (auto point : point_cloud_carto.points) {
     range_data_carto.returns.points.push_back(point);
   }
-
   range_data_carto =
     sensor::TransformRangeData(
     range_data_carto,
@@ -98,20 +94,17 @@ std::unique_ptr<sensor::RangeDataCarto> GridMapper::AddRangeData(
     sensor::TransformPointCloud(
     point_cloud_carto, transform::ToRigid2(
       global_pose.inverse()).cast<float>());
-
   transform::Rigid2d pose_predicted = transform::ToRigid2(global_pose);
 
   std::unique_ptr<transform::Rigid2d> pose_estimated_2d =
     ScanMatch(pose_predicted, point_cloud_carto);
-
   if (pose_estimated_2d == nullptr) {
     LOG(WARNING) << "scan matching failed";
     *pose_estimated_2d = pose_predicted;
   }
 
   sensor::RangeDataCarto range_data_in_global = sensor::TransformRangeData(
-    range_data_carto, pose_estimated_2d->cast<float>());
-
+    range_data_carto, pose_estimated_2d->cast<float>());;
   const transform::Rigid3d pose_estimated =
     transform::ToRigid3(*pose_estimated_2d);
   bool insertion_result = InsertIntoSubmap(
@@ -119,7 +112,6 @@ std::unique_ptr<sensor::RangeDataCarto> GridMapper::AddRangeData(
   if (!insertion_result) {
     LOG(INFO) << "Insert into submap failed";
   }
-
   grid_inserter_2d_->Insert(range_data_in_global, grid_2d_.get());
 
   // Add range data into accumulated_data_
@@ -127,7 +119,6 @@ std::unique_ptr<sensor::RangeDataCarto> GridMapper::AddRangeData(
     accumulated_data_.submap_pose = transform::ToRigid2(pose_estimated);
     current_submap_pose = pose_estimated;
   }
-
   auto point_local_pose_estimated = current_submap_pose.inverse() * pose_estimated;
   point_cloud.local_pose = transform::ToRigid2(point_local_pose_estimated);
 
@@ -139,7 +130,6 @@ std::unique_ptr<sensor::RangeDataCarto> GridMapper::AddRangeData(
     point_cloud.returns_points.emplace_back(local_point.head<2>());
   }
   point_cloud.time_stamp = common::ToUniversal(time) / 100ll;
-
 
   accumulated_data_.point_clouds.emplace_back(point_cloud);
 

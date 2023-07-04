@@ -269,7 +269,7 @@ constexpr double kDogMaxLinearVelocity = 1.5f;  // m/s
 constexpr double kDogMaxAngularVelocity = 1.5f;  // rad/s
 
 bool MotionFilter::IsSimilar(
-  const common::Time time,
+  const common::Time & time,
   const transform::Rigid3d & pose)
 {
   const common::Duration max_time_seconds = common::FromSeconds(

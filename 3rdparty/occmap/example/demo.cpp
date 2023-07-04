@@ -87,6 +87,7 @@ std::vector<PointCloudPose> readDataset(const std::string & root_path)
         std::stod(res[5].c_str()), std::stod(res[6].c_str()));
       Eigen::Vector3d translation(std::stod(res[1].c_str()), std::stod(res[2].c_str()),
         std::stod(res[3].c_str()));
+      quaternion.normalize();
       transform::Rigid3d pose(translation, quaternion);
       pointcloud_pose.pose = pose;
       std::string cloud_path = root_path + "/pointcloud/" + res[0] + ".txt";
@@ -215,7 +216,6 @@ int main(int argc, char ** argv)
     eigentf, probability_param, submap_param,
     files_save_param, filter_param,
     ceres_param, mapbeauti_param);
-
   // 插入点云
   for (auto & pointcloud_pose : vpointcloud_pose) {
     std::unique_ptr<sensor::RangeDataCarto> range_data_ptr =
