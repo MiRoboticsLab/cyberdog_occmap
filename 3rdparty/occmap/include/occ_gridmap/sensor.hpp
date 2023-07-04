@@ -114,7 +114,7 @@ public:
   // If the accumulated motion (linear, rotational, or time) is above the
   // threshold, returns false. Otherwise the relative motion is accumulated and
   // true is returned.
-  bool IsSimilar(common::Time time, const transform::Rigid3d & pose);
+  bool IsSimilar(const common::Time & time, const transform::Rigid3d & pose);
   common::Time last_time() const {return last_time_;}
 
 private:
